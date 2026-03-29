@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import api from '../api';
 import toast from 'react-hot-toast';
+import PageHeader from '../components/PageHeader';
 import {
   Settings,
   Plus,
@@ -181,13 +182,10 @@ const ManageRules = () => {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div>
-        <h1 className="text-2xl font-bold text-slate-900 flex items-center gap-2">
-          <Settings size={24} className="text-indigo-600" />
-          Approval Rules
-        </h1>
-        <p className="text-sm text-slate-500 mt-1">Configure how expenses are approved</p>
-      </div>
+      <PageHeader
+        title="Approval Rules"
+        subtitle="Configure how expenses are approved in your company"
+      />
 
       {/* Loading */}
       {loading && (

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import api from '../api';
 import toast from 'react-hot-toast';
+import PageHeader from '../components/PageHeader';
 import {
   Users,
   Plus,
@@ -151,23 +152,16 @@ const AdminUsers = () => {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between flex-wrap gap-4">
-        <div>
-          <h1 className="text-2xl font-bold text-slate-900 flex items-center gap-2">
-            <Users size={24} className="text-indigo-600" />
-            User Management
-          </h1>
-          {!loading && (
-            <p className="text-sm text-slate-500 mt-1">
-              {users.length} user{users.length !== 1 ? 's' : ''} in your company
-            </p>
-          )}
-        </div>
-        <button onClick={() => setShowModal(true)} className="btn-primary flex items-center gap-2">
-          <Plus size={18} />
-          Add User
-        </button>
-      </div>
+      <PageHeader
+        title="User Management"
+        subtitle={!loading && `${users.length} user${users.length !== 1 ? 's' : ''} in your company`}
+        action={
+          <button onClick={() => setShowModal(true)} className="btn-primary flex items-center gap-2">
+            <Plus size={18} />
+            Add User
+          </button>
+        }
+      />
 
       {/* Loading */}
       {loading && (

@@ -74,6 +74,7 @@ class ReceiptScanView(APIView):
                         "date": None,
                         "description": None,
                         "category": None,
+                        "merchant": None,
                         "merchant_name": None,
                     },
                 },
@@ -91,6 +92,7 @@ class ReceiptScanView(APIView):
                         "date": None,
                         "description": None,
                         "category": None,
+                        "merchant": None,
                         "merchant_name": None,
                     },
                 },
@@ -104,8 +106,11 @@ class ReceiptScanView(APIView):
                     "amount": result.get("amount"),
                     "currency": result.get("currency"),
                     "date": result.get("date"),
-                    "description": result.get("description"),
-                    "category": result.get("description"),  # category guess from OCR
+                    # description from OCR is a category guess (FOOD, TRAVEL, etc.)
+                    "category": result.get("description"),
+                    "description": result.get("merchant") or result.get("description"),
+                    # Include both keys so frontend can use either
+                    "merchant": result.get("merchant"),
                     "merchant_name": result.get("merchant"),
                 },
             },

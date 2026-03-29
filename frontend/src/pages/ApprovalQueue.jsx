@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import api from '../api';
 import toast from 'react-hot-toast';
 import ApprovalTimeline from '../components/ApprovalTimeline';
+import PageHeader from '../components/PageHeader';
+import SkeletonLoader from '../components/SkeletonLoader';
 import {
   ClipboardCheck,
   CheckCircle,
@@ -99,24 +101,14 @@ const ApprovalQueue = () => {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div>
-        <h1 className="text-2xl font-bold text-slate-900 flex items-center gap-2">
-          <ClipboardCheck size={24} className="text-indigo-600" />
-          Pending Approvals
-          {!loading && approvals.length > 0 && (
-            <span className="ml-1 text-base bg-indigo-100 text-indigo-700 px-2.5 py-0.5 rounded-full font-semibold">
-              {approvals.length}
-            </span>
-          )}
-        </h1>
-        <p className="text-sm text-slate-500 mt-1">Review and approve pending expense requests</p>
-      </div>
+      <PageHeader
+        title="Approval Queue"
+        subtitle="Review and action pending expense requests"
+      />
 
       {/* Loading */}
       {loading && (
-        <div className="flex items-center justify-center py-20">
-          <Loader2 size={28} className="animate-spin text-indigo-500" />
-        </div>
+        <SkeletonLoader rows={4} cols={1} />
       )}
 
       {/* Error */}
@@ -129,10 +121,12 @@ const ApprovalQueue = () => {
 
       {/* Empty State */}
       {!loading && !error && approvals.length === 0 && (
-        <div className="card text-center py-16">
-          <PartyPopper size={48} className="mx-auto text-slate-300 mb-4" />
-          <p className="text-lg font-semibold text-slate-700">No pending approvals 🎉</p>
-          <p className="text-sm text-slate-500 mt-1">You're all caught up!</p>
+        <div className="text-center py-16">
+          <div className="mx-auto w-24 h-24 bg-emerald-50 rounded-full flex items-center justify-center mb-4">
+            <CheckCircle size={40} className="text-emerald-400" />
+          </div>
+          <h3 className="text-lg font-semibold text-slate-700 mb-2">All caught up!</h3>
+          <p className="text-slate-500">No pending approvals at the moment.</p>
         </div>
       )}
 

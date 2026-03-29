@@ -4,6 +4,8 @@ import api from '../api';
 import toast from 'react-hot-toast';
 import ExpenseStatusBadge from '../components/ExpenseStatusBadge';
 import ApprovalTimeline from '../components/ApprovalTimeline';
+import PageHeader from '../components/PageHeader';
+import SkeletonLoader from '../components/SkeletonLoader';
 import {
   History,
   X,
@@ -103,21 +105,16 @@ const ExpenseHistory = () => {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between flex-wrap gap-4">
-        <div>
-          <h1 className="text-2xl font-bold text-slate-900 flex items-center gap-2">
-            <History size={24} className="text-indigo-600" />
-            Expense History
-          </h1>
-          <p className="text-sm text-slate-500 mt-1">
-            {expenses.length} total expense{expenses.length !== 1 ? 's' : ''}
-          </p>
-        </div>
-        <Link to="/expenses/new" className="btn-primary flex items-center gap-2">
-          <Plus size={18} />
-          New Expense
-        </Link>
-      </div>
+      <PageHeader 
+        title="My Expenses" 
+        subtitle="Track and manage your submitted expenses" 
+        action={
+          <Link to="/expenses/new" className="btn-primary flex items-center gap-2">
+            <Plus size={18} />
+            Submit New
+          </Link>
+        } 
+      />
 
       {/* Filter Tabs */}
       <div className="flex items-center gap-1 bg-slate-100 p-1 rounded-lg w-fit">
@@ -147,9 +144,7 @@ const ExpenseHistory = () => {
 
       {/* Loading State */}
       {loading && (
-        <div className="flex items-center justify-center py-20">
-          <Loader2 size={28} className="animate-spin text-indigo-500" />
-        </div>
+        <SkeletonLoader rows={5} cols={6} />
       )}
 
       {/* Error State */}
@@ -162,14 +157,13 @@ const ExpenseHistory = () => {
 
       {/* Empty State */}
       {!loading && !error && expenses.length === 0 && (
-        <div className="card text-center py-16">
-          <Receipt size={48} className="mx-auto text-slate-300 mb-4" />
-          <p className="text-lg font-semibold text-slate-700">No expenses yet</p>
-          <p className="text-sm text-slate-500 mt-1">Submit your first expense to get started!</p>
-          <Link to="/expenses/new" className="btn-primary inline-flex items-center gap-2 mt-5">
-            <Plus size={18} />
-            Submit Expense
-          </Link>
+        <div className="text-center py-16">
+          <div className="mx-auto w-24 h-24 bg-indigo-50 rounded-full flex items-center justify-center mb-4">
+            <Receipt size={40} className="text-indigo-400" />
+          </div>
+          <h3 className="text-lg font-semibold text-slate-700 mb-2">No expenses yet</h3>
+          <p className="text-slate-500 mb-6">Submit your first expense to get started</p>
+          <Link to="/expenses/new" className="btn-primary">Submit Expense</Link>
         </div>
       )}
 

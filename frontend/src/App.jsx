@@ -14,6 +14,7 @@ import ExpenseHistory from './pages/ExpenseHistory';
 import ApprovalQueue from './pages/ApprovalQueue';
 import AdminUsers from './pages/AdminUsers';
 import ManageRules from './pages/ManageRules';
+import NotFound from './pages/NotFound';
 
 const ProtectedLayout = ({ children }) => (
   <div className="min-h-screen bg-slate-50">
@@ -70,7 +71,7 @@ function App() {
             </RoleGuard>
           } />
 
-          <Route path="*" element={<Navigate to="/dashboard" replace />} />
+          <Route path="*" element={<ProtectedLayout><NotFound /></ProtectedLayout>} />
         </Routes>
       </Router>
     </AuthProvider>

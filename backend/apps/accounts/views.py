@@ -51,15 +51,20 @@ class SignupView(generics.CreateAPIView):
 
         # Generate JWT tokens for immediate login
         refresh = RefreshToken.for_user(user)
+        tokens = {
+            "access": str(refresh.access_token),
+            "refresh": str(refresh),
+        }
 
         return Response(
             {
                 "message": "Account created successfully.",
                 "user": UserSerializer(user).data,
-                "tokens": {
-                    "access": str(refresh.access_token),
-                    "refresh": str(refresh),
-                },
+                # Flat tokens for direct destructuring in frontend
+                "access": tokens["access"],
+                "refresh": tokens["refresh"],
+                # Also keep nested format for backward compat
+                "tokens": tokens,
             },
             status=status.HTTP_201_CREATED,
         )
@@ -85,11 +90,18 @@ class LoginView(APIView):
         serializer.is_valid(raise_exception=True)
         data = serializer.validated_data
 
+        user_data = UserSerializer(data["user"]).data
+        tokens = data["tokens"]
+
         return Response(
             {
                 "message": "Login successful.",
-                "user": UserSerializer(data["user"]).data,
-                "tokens": data["tokens"],
+                "user": user_data,
+                # Flat tokens for direct destructuring in frontend
+                "access": tokens["access"],
+                "refresh": tokens["refresh"],
+                # Also keep nested format for backward compat
+                "tokens": tokens,
             },
             status=status.HTTP_200_OK,
         )
