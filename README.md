@@ -1,7 +1,24 @@
-# ReimburseFlow — Expense Reimbursement Management System
+# ReimburSync — Expense Reimbursement Management System
+
+![Django](https://img.shields.io/badge/Django-4.x-092E20?style=for-the-badge&logo=django&logoColor=white)
+![React](https://img.shields.io/badge/React-18-61DAFB?style=for-the-badge&logo=react&logoColor=black)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-15-4169E1?style=for-the-badge&logo=postgresql&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-Compose-2496ED?style=for-the-badge&logo=docker&logoColor=white)
+![TailwindCSS](https://img.shields.io/badge/Tailwind_CSS-v4-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
+![JWT](https://img.shields.io/badge/Auth-JWT-000000?style=for-the-badge&logo=jsonwebtokens&logoColor=white)
 
 ## Overview
-ReimburseFlow is a comprehensive, multi-tenant expense reimbursement platform that allows companies to streamline how employee expenses are logged, reviewed, and approved. It solves the delay and complexity of manual expense approvals by providing robust conditional logic, currency conversions, and role-based workflows in an intuitive tracking dashboard.
+ReimburSync is a comprehensive, multi-tenant expense reimbursement platform that allows companies to streamline how employee expenses are logged, reviewed, and approved. It solves the delay and complexity of manual expense approvals by providing robust conditional logic, currency conversions, and role-based workflows in an intuitive tracking dashboard.
+
+## Demo Credentials
+After seeding demo data (see Setup section), use these accounts to explore the system:
+
+| Role | Email | Password |
+|---|---|---|
+| Admin | admin@acme.com | Admin1234 |
+| Manager | manager@acme.com | Manager1234 |
+| Employee | john@acme.com | Employee1234 |
+| Employee | priya@acme.com | Employee1234 |
 
 ## Tech Stack
 | Layer | Technology | Purpose |
@@ -63,6 +80,14 @@ Our logic engine supports 4 configurable rule architectures to fit any business:
 | PATCH | `/api/rules/<uuid>/` | JWT | Admin |
 | POST | `/api/ocr/scan/` | JWT | Authenticated |
 
+## Key Design Decisions
+
+- **is_manager_approver flag**: When enabled on a user, their direct manager always reviews the expense first — before any rule-based approvers kick in. This mirrors real-world corporate hierarchies.
+- **Company-scoped everything**: Every model query filters by the logged-in user's company. A user from Company A can never see Company B's data — enforced at the ORM level, not just the UI.
+- **Approval engine isolation**: The entire workflow logic lives in `approvals/engine.py` — a single file with pure functions. This makes it independently testable and easy to extend with new rule types.
+- **Dual validation strategy**: Validation runs twice — on the frontend for immediate UX feedback, and on the backend serializers as the source of truth. Frontend validation never replaces server-side checks.
+- **Currency stored twice**: Expenses store both the original currency/amount AND the converted company-currency amount. This ensures managers always see comparable numbers regardless of what currency the employee submitted in.
+
 ## Security Considerations
 - JWT access tokens are short-lived; refresh tokens are stored securely
 - All expense and user queries are company-scoped — users cannot access data from other companies
@@ -85,13 +110,19 @@ Duplicate the sample environment configurations in your root level:
 ### Running with Docker
 The easiest and recommended way:
 ```bash
-docker-compose up --build
+docker compose up --build
 ```
 This spins up PostgreSQL, applies Django migrations, and mounts the React proxy bindings all on `localhost`.
 
 - **Backend** → `http://localhost:8000`
 - **Frontend** → `http://localhost:5173`
 - **Database** → `localhost:5432`
+
+Seed demo data (optional, after containers are running):
+```bash
+# In a new terminal tab, after containers are running:
+docker compose exec backend python manage.py seed_demo
+```
 
 ### Running without Docker
 **Backend:**
