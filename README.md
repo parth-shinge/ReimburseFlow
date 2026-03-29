@@ -130,8 +130,3 @@ This spins up PostgreSQL, applies Django migrations, and mounts the React proxy 
 │   │               ManageRules)
 └── docker-compose.yml
 ```
-
-## Team
-- **Team Member 1** - Development & Architecture
-- **Team Member 2** - Backend API & ORM
-- **Team Member 3** - React Frontend UI/UX
